@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import express, { Request, Response } from "express";
 
 const app = express();
-const port = 2001;
+const port = 3001;
 
 app.use(bodyParser());
 
@@ -18,19 +18,6 @@ const initClickHouseClient = async () => {
   console.log('successfully db connection!');
   return client;
 };
-
-app.put("/add", async (req: Request, res: Response) => {
-  const client = await initClickHouseClient();
-  const { id, string_column } = req.body;
-  const row = await client.query({
-    query: `INSERT INTO table1 VALUES (${id},${string_column})`,
-  });
-
-  const jsonRow = await row.json();
-  res.send(jsonRow);
-});
-
-
 
 app.get("/", async (req: Request, res: Response) => {
   const client = await initClickHouseClient();
@@ -53,7 +40,6 @@ app.get("/search", async (req: Request, res: Response) => {
   const jsonRow = await row.json();
   res.send(jsonRow);
 });
-
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
